@@ -35,18 +35,34 @@ INFO_FONT_SIZE = int(13 * 300 / 72)  # Adjusted font size for high DPI
 #CHINESE_PATTERN = re.compile(r'[\p{L}\u2e80-\u9fff]+')
 
 CHINESE_PATTERN = re.compile(r'[\u2E80-\u2EFF\u31C0-\u31EF\u4E00-\u9FFF]')
-GB2312_PATTERN = re.compile(r'[\x81-\xFE][\x40-\xFE]')
 
+
+# Example of loading fonts
+fonts = {}
+for key, font_filename in FONT_OPTIONS.items():
+    font_path = os.path.join(os.path.dirname(__file__), font_filename)
+    try:
+        fonts[key] = ImageFont.truetype(font_path, size=12)  # Adjust size as needed
+    except IOError:
+        print(f"Error: Cannot load font file '{font_filename}'")
+
+# Example of loading title font
+title_font_path = os.path.join(os.path.dirname(__file__), TITLE_FONT)
+try:
+    title_font = ImageFont.truetype(title_font_path, size=18)  # Adjust size as needed
+except IOError:
+    print(f"Error: Cannot load title font file '{TITLE_FONT}'")
+    
 class ArticleProducer:
     def __init__(self, article, text, author='', only_chinese=True):
         self.article = article
         self.text = text
         if only_chinese:
             self.text = ''.join(re.findall(CHINESE_PATTERN, text))
-            #self.text = ''.join(re.findall(GB2312_PATTERN, text))
         self.offset = (SQUARE_SIZE - FONT_SIZE) / 2
         self.image = None
         self.draw = None
+        
         self.font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
         self.title_font = ImageFont.truetype(TITLE_FONT, TITLE_FONT_SIZE)
         self.info_font = ImageFont.truetype(TITLE_FONT, INFO_FONT_SIZE)
