@@ -1,12 +1,11 @@
 import streamlit as st
 import base64
 from PIL import Image, ImageDraw, ImageFont
-import re
-import io
 import regex as re
 from fpdf import FPDF
-from PIL import Image
 import tempfile
+import concurrent.futures
+port tempfile
 
 # Define constants
 FONT_OPTIONS = {
@@ -31,8 +30,6 @@ MODE = 'RGBA'
 PIC_SCHEME = 'png'
 TITLE_FONT_SIZE = int(35 * 300 / 72)  # Adjusted font size for high DPI
 INFO_FONT_SIZE = int(13 * 300 / 72)  # Adjusted font size for high DPI
-
-
 
 # Regular expression for matching Chinese characters
 CHINESE_PATTERN = re.compile(r'[\u2E80-\u2EFF\u31C0-\u31EF\u4E00-\u9FFF]')
