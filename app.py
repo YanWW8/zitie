@@ -74,16 +74,25 @@ class ArticleProducer:
     def draw_level_line(self, x1, x2, y, width, step=1):
         for x in range(x1, x2, step):
             self.draw.line([(x, y), (x + step / 2, y)], fill=TABLE_COLOR, width=width)
+    
+    def estimate_text_size(text, font):
+        width = 0
+        height = 0
+        for char in text:
+            char_width, char_height = font.getsize(char)
+            width += char_width
+            height = max(height, char_height)
+        return width, height
 
     def paint(self):
         # Draw the title
-        title_width, title_height = self.draw.textsize(self.article, font=self.title_font)
+        title_width, title_height = estimate_text_size(self.article, font=self.title_font)
         title_x = (self.image.width - title_width) / 2
         self.draw.text((title_x, SQUARE_SIZE), self.article, font=self.title_font, fill='black')
     
         # Draw the info line
         info_text = "姓名: ________    教师评价：坐姿 ☆☆☆☆☆    等级：________"
-        info_width, info_height = self.draw.textsize(info_text, font=self.info_font)
+        info_width, info_height = estimate_text_size(info_text, font=self.info_font)
         info_x = (self.image.width - info_width) / 2
         self.draw.text((info_x, SQUARE_SIZE * 2), info_text, font=self.info_font, fill='black')
     
