@@ -76,14 +76,16 @@ class ArticleProducer:
             self.draw.line([(x, y), (x + step / 2, y)], fill=TABLE_COLOR, width=width)
 
     def estimate_text_size(self, text, font):
-        width = 0
-        height = 0
+        temp_image = Image.new('RGBA', (1, 1), (255, 255, 255, 0))  # Create a temporary image
+        temp_draw = ImageDraw.Draw(temp_image)
+        text_width, text_height = 0, 0
+        
         for char in text:
-            char_width, char_height = self.draw.textsize(char, font=font)
-            width += char_width
-            height = max(height, char_height)
-        return width, height
-
+            char_width, char_height = temp_draw.textsize(char, font=font)
+            text_width += char_width
+            text_height = max(text_height, char_height)
+        
+        return text_width, text_height
     def paint(self):
         # Draw the title
         title_width, title_height = self.estimate_text_size(self.article, font=self.title_font)
