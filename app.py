@@ -138,8 +138,9 @@ characters_input = st.text_area("请输入汉字 (以逗号分隔):", "")
 
 font_option = st.selectbox("选择字体:", options=list(FONT_OPTIONS.keys()))
 
+st.write("Before button click detection")
 if st.button("生成 PDF"):
-    st.write("Button clicked!")  # Debugging statement to check if button is clicked
+    st.write("Button clicked!")
 
     characters = characters_input.split("，")
 
@@ -165,3 +166,6 @@ if st.button("生成 PDF"):
         st.markdown(href, unsafe_allow_html=True)
     else:
         st.error("请输入标题和至少一个汉字。")
+
+    # Rest of your code logic here
+st.write("After button click detection")
