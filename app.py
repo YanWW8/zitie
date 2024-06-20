@@ -147,6 +147,12 @@ font_option = st.selectbox("选择字体:", options=list(FONT_OPTIONS.keys()))
 if st.button("生成 PDF"):
     characters = characters_input.split("，")
 
+    try:
+        font = ImageFont.truetype('./姜浩.ttf', FONT_SIZE)
+        st.write(f"Font loading nice")
+    except OSError as e:
+        st.write(f"Font loading error: {e}")
+    
     if characters and title:
         FONT_PATH = FONT_OPTIONS.get(font_option)
         
