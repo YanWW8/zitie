@@ -118,7 +118,7 @@ class ArticleProducer:
             self.draw.text((x_offset, SQUARE_SIZE * (y_offset + 1) + self.offset), char, font=self.font, fill=self.current_color, spacing=SQUARE_SIZE)
             
 
-st.title("兰芳专属字帖生成网")
+st.title("兰芳专属")
 title = st.text_input("请输入标题:")
 characters_input = st.text_area("请输入汉字 (以逗号分隔):", "")
 
