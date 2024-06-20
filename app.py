@@ -149,6 +149,10 @@ if st.button("生成 PDF"):
     if characters and title:
         FONT_PATH = FONT_OPTIONS.get(font_option)
         
+        # Assuming 'self.title_font' is the object in question
+        attributes_and_methods = dir(FONT_PATH)
+        st.write(attributes_and_methods)
+
         images = []
         page_characters = []
         for i, char in enumerate(characters):
