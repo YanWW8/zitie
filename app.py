@@ -139,7 +139,7 @@ characters_input = st.text_area("请输入汉字 (以逗号分隔):", "")
 font_option = st.selectbox("选择字体:", options=list(FONT_OPTIONS.keys()))
 
 st.write("Before button click detection")
-if st.button("生成 PDF"):
+if st.button("PDF"):
     st.write("Button clicked!")
 
     characters = characters_input.split("，")
