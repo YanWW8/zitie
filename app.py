@@ -139,9 +139,14 @@ characters_input = st.text_area("请输入汉字 (以逗号分隔):", "")
 font_option = st.selectbox("选择字体:", options=list(FONT_OPTIONS.keys()))
 
 if st.button("生成 PDF"):
+    st.write("Button clicked!")  # Debugging statement to check if button is clicked
+
     characters = characters_input.split("，")
 
     if characters and title:
+        st.write(f"Title: {title}")  # Debugging statement to check title input
+        st.write(f"Characters: {characters}")  # Debugging statement to check characters input
+
         FONT_PATH = FONT_OPTIONS.get(font_option)
         
         images = []
