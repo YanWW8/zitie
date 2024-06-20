@@ -103,7 +103,7 @@ class ArticleProducer:
         for x in range(ROW):
             y_offset = y * 2 + 2  # Adjusted y-coordinate
             x_offset = (x * SQUARE_SIZE) + SQUARE_SIZE + self.offset
-            print(f"x_offset: {x_offset}, y_offset: {y_offset}")
+            #print(f"x_offset: {x_offset}, y_offset: {y_offset}")
             if x_offset != 195:
                 self.current_color = SECOND_FONT_COLOR
             else:
