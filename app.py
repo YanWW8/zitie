@@ -32,11 +32,9 @@ TITLE_FONT_SIZE = int(35 * 300 / 72)  # Adjusted font size for high DPI
 INFO_FONT_SIZE = int(13 * 300 / 72)  # Adjusted font size for high DPI
 
 
-# Regular expression for matching Chinese characters
-#CHINESE_PATTERN = re.compile(r'[\p{L}\u2e80-\u9fff]+')
 
 CHINESE_PATTERN = re.compile(r'[\u2E80-\u2EFF\u31C0-\u31EF\u4E00-\u9FFF]')
-GB2312_PATTERN = re.compile(r'[\x81-\xFE][\x40-\xFE]')
+#GB2312_PATTERN = re.compile(r'[\x81-\xFE][\x40-\xFE]')
 
 class ArticleProducer:
     def __init__(self, article, text, author='', only_chinese=True):
@@ -80,8 +78,6 @@ class ArticleProducer:
     def paint(self):
         # Draw the title
         title_width, title_height = self.draw.textsize(self.article, font=self.title_font)
-        #title_width, title_height = self.draw.textsize(self.article, font=title_font)
-
         title_x = (self.image.width - title_width) / 2
         self.draw.text((title_x, SQUARE_SIZE), self.article, font=self.title_font, fill='black')
         # Draw the info line
