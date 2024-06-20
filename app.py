@@ -8,13 +8,13 @@ from fpdf import FPDF
 
 # Define constants
 FONT_OPTIONS = {
-    "姜浩":"姜浩.ttf",
-    "田英章": "田英章楷书.ttf",
-    "司马彦":"司马彦.ttf",
-    "庞中华": "庞中华.ttf",
-    "楷体":"楷体.ttf"
+    "姜浩":"./姜浩.ttf",
+    "田英章": "./田英章楷书.ttf",
+    "司马彦":"./司马彦.ttf",
+    "庞中华": "./庞中华.ttf",
+    "楷体":"./楷体.ttf"
 }
-TITLE_FONT = "tian.ttf"
+TITLE_FONT = "./tian.ttf"
 DPI = 300
 SQUARE_SIZE_CM = 1.5
 SQUARE_SIZE = int(SQUARE_SIZE_CM * 118.11)  # Convert cm to pixels at 300 DPI
@@ -36,23 +36,6 @@ INFO_FONT_SIZE = int(13 * 300 / 72)  # Adjusted font size for high DPI
 
 CHINESE_PATTERN = re.compile(r'[\u2E80-\u2EFF\u31C0-\u31EF\u4E00-\u9FFF]')
 
-
-# Example of loading fonts
-fonts = {}
-for key, font_filename in FONT_OPTIONS.items():
-    font_path = os.path.join(os.path.dirname(__file__), font_filename)
-    try:
-        fonts[key] = ImageFont.truetype(font_path, size=12)  # Adjust size as needed
-    except IOError:
-        print(f"Error: Cannot load font file '{font_filename}'")
-
-# Example of loading title font
-title_font_path = os.path.join(os.path.dirname(__file__), TITLE_FONT)
-try:
-    title_font = ImageFont.truetype(title_font_path, size=18)  # Adjust size as needed
-except IOError:
-    print(f"Error: Cannot load title font file '{TITLE_FONT}'")
-    
 class ArticleProducer:
     def __init__(self, article, text, author='', only_chinese=True):
         self.article = article
