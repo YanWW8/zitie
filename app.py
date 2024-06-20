@@ -118,13 +118,13 @@ def generate_page(article, text, font_path):
     producer = ArticleProducer(article=article, text=text, font_path=font_path)
     return producer.paint()
 
-st.title("兰芳专属")
-title = st.text_input("请输入标题:")
-characters_input = st.text_area("请输入汉字 (以逗号分隔):", "")
+st.title("11")
+title = st.text_input("22:")
+characters_input = st.text_area("33", "")
 
-font_option = st.selectbox("选择字体:", options=list(FONT_OPTIONS.keys()))
+font_option = st.selectbox("44:", options=list(FONT_OPTIONS.keys()))
 
-if st.button("生成 PDF"):
+if st.button("PDF"):
     characters = characters_input.split("，")
 
     if characters and title:
