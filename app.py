@@ -3,15 +3,16 @@ import base64
 from PIL import Image, ImageDraw, ImageFont
 import re
 import io
+import regex as re
 from fpdf import FPDF
 
 # Define constants
 FONT_OPTIONS = {
-    "姜浩": "姜浩.ttf",
+    "姜浩":"姜浩.ttf",
     "田英章": "田英章楷书.ttf",
-    "司马彦": "司马彦.ttf",
+    "司马彦":"司马彦.ttf",
     "庞中华": "庞中华.ttf",
-    "楷体": "楷体.ttf"
+    "楷体":"楷体.ttf"
 }
 TITLE_FONT = "tian.ttf"
 DPI = 300
@@ -29,19 +30,24 @@ PIC_SCHEME = 'png'
 TITLE_FONT_SIZE = int(35 * 300 / 72)  # Adjusted font size for high DPI
 INFO_FONT_SIZE = int(13 * 300 / 72)  # Adjusted font size for high DPI
 
+
 # Regular expression for matching Chinese characters
+#CHINESE_PATTERN = re.compile(r'[\p{L}\u2e80-\u9fff]+')
+
 CHINESE_PATTERN = re.compile(r'[\u2E80-\u2EFF\u31C0-\u31EF\u4E00-\u9FFF]')
+GB2312_PATTERN = re.compile(r'[\x81-\xFE][\x40-\xFE]')
 
 class ArticleProducer:
-    def __init__(self, article, text, font_path, only_chinese=True):
+    def __init__(self, article, text, author='', only_chinese=True):
         self.article = article
         self.text = text
         if only_chinese:
             self.text = ''.join(re.findall(CHINESE_PATTERN, text))
+            #self.text = ''.join(re.findall(GB2312_PATTERN, text))
         self.offset = (SQUARE_SIZE - FONT_SIZE) / 2
         self.image = None
         self.draw = None
-        self.font = ImageFont.truetype(font_path, FONT_SIZE)
+        self.font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
         self.title_font = ImageFont.truetype(TITLE_FONT, TITLE_FONT_SIZE)
         self.info_font = ImageFont.truetype(TITLE_FONT, INFO_FONT_SIZE)
         self._init_painting()
@@ -90,20 +96,21 @@ class ArticleProducer:
                     self.write_line(char, char_index)
                     char_index += 1  # Move to the next character
         return self.image
-
+    
     def write_line(self, char, y):
         for x in range(ROW):
             y_offset = y * 2 + 2  # Adjusted y-coordinate
             x_offset = (x * SQUARE_SIZE) + SQUARE_SIZE + self.offset
+            print(f"x_offset: {x_offset}, y_offset: {y_offset}")
             if x_offset != 195:
                 self.current_color = SECOND_FONT_COLOR
             else:
                 self.current_color = FIRST_FONT_COLOR
             # Draw character
             self.draw.text((x_offset, SQUARE_SIZE * (y_offset + 1) + self.offset), char, font=self.font, fill=self.current_color, spacing=SQUARE_SIZE)
-
-def generate_pdf(title, characters, font_path):
-    producer = ArticleProducer(article=title, text=characters, font_path=font_path)
+            
+def generate_pdf(title, characters):
+    producer = ArticleProducer(article=title, text=characters)
     image = producer.paint()
 
     # Convert image to bytes
@@ -132,22 +139,16 @@ def images_to_pdf(images):
     pdf_byte_array.seek(0)
     return pdf_byte_array
 
-st.title("兰芳专属")
+st.title("兰芳专属字帖生成网")
 title = st.text_input("请输入标题:")
 characters_input = st.text_area("请输入汉字 (以逗号分隔):", "")
 
 font_option = st.selectbox("选择字体:", options=list(FONT_OPTIONS.keys()))
 
-st.write("Before button click detection")
-if st.button("PDF"):
-    st.write("Button clicked!")
-
+if st.button("生成 PDF"):
     characters = characters_input.split("，")
 
     if characters and title:
-        st.write(f"Title: {title}")  # Debugging statement to check title input
-        st.write(f"Characters: {characters}")  # Debugging statement to check characters input
-
         FONT_PATH = FONT_OPTIONS.get(font_option)
         
         images = []
@@ -166,6 +167,3 @@ if st.button("PDF"):
         st.markdown(href, unsafe_allow_html=True)
     else:
         st.error("请输入标题和至少一个汉字。")
-
-    # Rest of your code logic here
-st.write("After button click detection")
