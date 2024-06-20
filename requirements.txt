@@ -1,4 +1,4 @@
-streamlit
-Pillow
-regex
-fpdf
+streamlit==1.35.0
+Pillow==10.3.0
+regex==2024.5.15 
+fpdf==1.7.2
