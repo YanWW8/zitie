@@ -5,17 +5,18 @@ import re
 import io
 import regex as re
 from fpdf import FPDF
+from PIL import Image
 import tempfile
 
 # Define constants
 FONT_OPTIONS = {
-    "姜浩":"./font/姜浩.ttf",
-    "田英章": "./font/田英章楷书.ttf",
-    "司马彦":"./font/司马彦.ttf",
-    "庞中华": "./font/庞中华.ttf",
-    "楷体":"./font/楷体.ttf"
+    "姜浩":"姜浩.ttf",
+    "田英章": "田英章楷书.ttf",
+    "司马彦":"司马彦.ttf",
+    "庞中华": "庞中华.ttf",
+    "楷体":"楷体.ttf"
 }
-TITLE_FONT = "./font/tian.ttf"
+TITLE_FONT = "tian.ttf"
 DPI = 300
 SQUARE_SIZE_CM = 1.5
 SQUARE_SIZE = int(SQUARE_SIZE_CM * 118.11)  # Convert cm to pixels at 300 DPI
@@ -32,12 +33,14 @@ TITLE_FONT_SIZE = int(35 * 300 / 72)  # Adjusted font size for high DPI
 INFO_FONT_SIZE = int(13 * 300 / 72)  # Adjusted font size for high DPI
 
 
+# Regular expression for matching Chinese characters
+#CHINESE_PATTERN = re.compile(r'[\p{L}\u2e80-\u9fff]+')
 
 CHINESE_PATTERN = re.compile(r'[\u2E80-\u2EFF\u31C0-\u31EF\u4E00-\u9FFF]')
 #GB2312_PATTERN = re.compile(r'[\x81-\xFE][\x40-\xFE]')
 
 class ArticleProducer:
-    def __init__(self, article, text, author='', only_chinese=True):
+    def __init__(self, article, text, only_chinese=True):
         self.article = article
         self.text = text
         if only_chinese:
@@ -75,29 +78,17 @@ class ArticleProducer:
         for x in range(x1, x2, step):
             self.draw.line([(x, y), (x + step / 2, y)], fill=TABLE_COLOR, width=width)
 
-    def estimate_text_size(self, text, font):
-        temp_image = Image.new('RGBA', (1, 1), (255, 255, 255, 0))  # Create a temporary image
-        temp_draw = ImageDraw.Draw(temp_image)
-        text_width, text_height = 0, 0
-        
-        for char in text:
-            char_width, char_height = temp_draw.textsize(char, font=font)
-            text_width += char_width
-            text_height = max(text_height, char_height)
-        
-        return text_width, text_height
     def paint(self):
         # Draw the title
-        title_width, title_height = self.estimate_text_size(self.article, font=self.title_font)
+        title_width, title_height = self.draw.textlength(self.article, font=self.title_font)
         title_x = (self.image.width - title_width) / 2
         self.draw.text((title_x, SQUARE_SIZE), self.article, font=self.title_font, fill='black')
-    
         # Draw the info line
         info_text = "姓名: ________    教师评价：坐姿 ☆☆☆☆☆    等级：________"
-        info_width, info_height = self.estimate_text_size(info_text, font=self.info_font)
+        info_width, info_height = self.draw.textlength(info_text, font=self.info_font)
         info_x = (self.image.width - info_width) / 2
         self.draw.text((info_x, SQUARE_SIZE * 2), info_text, font=self.info_font, fill='black')
-    
+
         # Iterate over characters and draw them
         char_index = 0
         for line in range(6):
@@ -107,16 +98,6 @@ class ArticleProducer:
                     self.write_line(char, char_index)
                     char_index += 1  # Move to the next character
         return self.image
-
-
-    #def generate_image(self):
-    #    return self.image
-
-    def generate_image_bytes(self):
-        image_bytes = io.BytesIO()
-        self.image.save(image_bytes, format='PNG')
-        image_bytes.seek(0)
-        return image_bytes
     
     def write_line(self, char, y):
         for x in range(ROW):
