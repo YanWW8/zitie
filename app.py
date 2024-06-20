@@ -155,7 +155,7 @@ if st.button("生成 PDF"):
         
         # Print out font paths for debugging
         print(f"FONT_PATH: {FONT_PATH}")
-        print(f"TITLE_FONT: {self.title_font}")
+        print(f"TITLE_FONT: {TITLE_FONT}")
         
         # Load fonts
         try:
