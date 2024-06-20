@@ -10,13 +10,13 @@ import tempfile
 
 # Define constants
 FONT_OPTIONS = {
-    "姜浩":"姜浩.ttf",
-    "田英章": "田英章楷书.ttf",
-    "司马彦":"司马彦.ttf",
-    "庞中华": "庞中华.ttf",
-    "楷体":"楷体.ttf"
+    "姜浩":"./font/姜浩.ttf",
+    "田英章": "./font/田英章楷书.ttf",
+    "司马彦":"./font/司马彦.ttf",
+    "庞中华": "./font/庞中华.ttf",
+    "楷体":"./font/楷体.ttf"
 }
-TITLE_FONT = "tian.ttf"
+TITLE_FONT = "./font/tian.ttf"
 DPI = 300
 SQUARE_SIZE_CM = 1.5
 SQUARE_SIZE = int(SQUARE_SIZE_CM * 118.11)  # Convert cm to pixels at 300 DPI
