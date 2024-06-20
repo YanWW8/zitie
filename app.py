@@ -132,25 +132,24 @@ def images_to_pdf(images):
     pdf_byte_array.seek(0)
     return pdf_byte_array
 
-
-st.title("兰芳专属字帖生成网")
+st.title("兰芳专属")
 title = st.text_input("请输入标题:")
 characters_input = st.text_area("请输入汉字 (以逗号分隔):", "")
 
 font_option = st.selectbox("选择字体:", options=list(FONT_OPTIONS.keys()))
 
-if st.form_submit_button(label='生成 PDF'):
+if st.button("生成 PDF"):
     characters = characters_input.split("，")
 
     if characters and title:
         FONT_PATH = FONT_OPTIONS.get(font_option)
-
+        
         images = []
         page_characters = []
         for i, char in enumerate(characters):
             page_characters.append(char)
             if (i + 1) % 7 == 0 or i == len(characters) - 1:
-                producer = ArticleProducer(article=title, text=''.join(page_characters), font_path=FONT_PATH)
+                producer = ArticleProducer(article=title, text=''.join(page_characters))
                 images.append(producer.paint())
                 page_characters = []
 
