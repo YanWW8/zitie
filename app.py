@@ -42,7 +42,6 @@ class ArticleProducer:
         self.text = text
         if only_chinese:
             self.text = ''.join(re.findall(CHINESE_PATTERN, text))
-            #self.text = ''.join(re.findall(GB2312_PATTERN, text))
         self.offset = (SQUARE_SIZE - FONT_SIZE) / 2
         self.image = None
         self.draw = None
@@ -77,12 +76,12 @@ class ArticleProducer:
 
     def paint(self):
         # Draw the title
-        title_width, title_height = self.draw.textsize(self.article, font=self.title_font)
+        title_width, title_height = self.title_font.getsize(self.article)
         title_x = (self.image.width - title_width) / 2
         self.draw.text((title_x, SQUARE_SIZE), self.article, font=self.title_font, fill='black')
         # Draw the info line
         info_text = "姓名: ________    教师评价：坐姿 ☆☆☆☆☆    等级：________"
-        info_width, info_height = self.draw.textsize(info_text, font=self.info_font)
+        info_width, info_height = self.info_font.getsize(info_text)
         info_x = (self.image.width - info_width) / 2
         self.draw.text((info_x, SQUARE_SIZE * 2), info_text, font=self.info_font, fill='black')
 
@@ -92,7 +91,7 @@ class ArticleProducer:
             for index in range(ROW):
                 if char_index < len(self.text):
                     char = self.text[char_index]
-                    self.write_line(char, char_index)
+                    self.write_character(char, line, index)
                     char_index += 1  # Move to the next character
         return self.image
     
