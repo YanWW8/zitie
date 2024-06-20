@@ -140,7 +140,7 @@ def images_to_pdf(images):
     pdf_byte_array.seek(0)
     return pdf_byte_array
 
-st.title("兰芳专属字帖生成网")
+st.title("兰芳专属")
 title = st.text_input("请输入标题:")
 characters_input = st.text_area("请输入汉字 (以逗号分隔):", "")
 
