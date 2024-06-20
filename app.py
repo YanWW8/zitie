@@ -149,6 +149,25 @@ font_option = st.selectbox("选择字体:", options=list(FONT_OPTIONS.keys()))
 if st.button("生成 PDF"):
     characters = characters_input.split("，")
 
+    import os
+    from PIL import ImageFont
+    
+    # Print out font paths for debugging
+    print(f"FONT_PATH: {FONT_PATH}")
+    print(f"TITLE_FONT: {TITLE_FONT}")
+    print(f"INFO_FONT: {INFO_FONT}")
+    
+    # Load fonts
+    try:
+        font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
+        title_font = ImageFont.truetype(TITLE_FONT, TITLE_FONT_SIZE)
+        info_font = ImageFont.truetype(INFO_FONT, INFO_FONT_SIZE)
+        # Continue with your code
+    except OSError as e:
+        print(f"Error loading font: {e}")
+        # Handle the error appropriately
+
+    
     if characters and title:
         FONT_PATH = FONT_OPTIONS.get(font_option)
         
