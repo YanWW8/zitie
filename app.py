@@ -6,15 +6,16 @@ import io
 import regex as re
 from fpdf import FPDF
 
+
 # Define constants
 FONT_OPTIONS = {
-    "姜浩":"./姜浩.ttf",
-    "田英章": "./田英章楷书.ttf",
-    "司马彦":"./司马彦.ttf",
-    "庞中华": "./庞中华.ttf",
-    "楷体":"./楷体.ttf"
+    "姜浩":"姜浩.ttf",
+    "田英章": "田英章楷书.ttf",
+    "司马彦":"司马彦.ttf",
+    "庞中华": "庞中华.ttf",
+    "楷体":"楷体.ttf"
 }
-TITLE_FONT = "./tian.ttf"
+TITLE_FONT = "tian.ttf"
 DPI = 300
 SQUARE_SIZE_CM = 1.5
 SQUARE_SIZE = int(SQUARE_SIZE_CM * 118.11)  # Convert cm to pixels at 300 DPI
@@ -35,6 +36,7 @@ INFO_FONT_SIZE = int(13 * 300 / 72)  # Adjusted font size for high DPI
 #CHINESE_PATTERN = re.compile(r'[\p{L}\u2e80-\u9fff]+')
 
 CHINESE_PATTERN = re.compile(r'[\u2E80-\u2EFF\u31C0-\u31EF\u4E00-\u9FFF]')
+GB2312_PATTERN = re.compile(r'[\x81-\xFE][\x40-\xFE]')
 
 class ArticleProducer:
     def __init__(self, article, text, author='', only_chinese=True):
@@ -42,10 +44,10 @@ class ArticleProducer:
         self.text = text
         if only_chinese:
             self.text = ''.join(re.findall(CHINESE_PATTERN, text))
+            #self.text = ''.join(re.findall(GB2312_PATTERN, text))
         self.offset = (SQUARE_SIZE - FONT_SIZE) / 2
         self.image = None
         self.draw = None
-        
         self.font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
         self.title_font = ImageFont.truetype(TITLE_FONT, TITLE_FONT_SIZE)
         self.info_font = ImageFont.truetype(TITLE_FONT, INFO_FONT_SIZE)
@@ -147,12 +149,6 @@ font_option = st.selectbox("选择字体:", options=list(FONT_OPTIONS.keys()))
 if st.button("生成 PDF"):
     characters = characters_input.split("，")
 
-    try:
-        font = ImageFont.truetype('./姜浩.ttf', FONT_SIZE)
-        st.write(f"Font loading nice")
-    except OSError as e:
-        st.write(f"Font loading error: {e}")
-    
     if characters and title:
         FONT_PATH = FONT_OPTIONS.get(font_option)
         
