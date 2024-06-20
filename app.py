@@ -10,13 +10,13 @@ import tempfile
 
 # Define constants
 FONT_OPTIONS = {
-    "姜浩":"./font/姜浩.ttf",
-    "田英章": "./font/田英章楷书.ttf",
-    "司马彦":"./font/司马彦.ttf",
-    "庞中华": "./font/庞中华.ttf",
-    "楷体":"./font/楷体.ttf"
+    "姜浩":"姜浩.ttf",
+    "田英章": "田英章楷书.ttf",
+    "司马彦":"司马彦.ttf",
+    "庞中华": "庞中华.ttf",
+    "楷体":"楷体.ttf"
 }
-TITLE_FONT = "./font/tian.ttf"
+TITLE_FONT = "tian.ttf"
 DPI = 300
 SQUARE_SIZE_CM = 1.5
 SQUARE_SIZE = int(SQUARE_SIZE_CM * 118.11)  # Convert cm to pixels at 300 DPI
@@ -110,7 +110,16 @@ class ArticleProducer:
                 self.current_color = FIRST_FONT_COLOR
             # Draw character
             self.draw.text((x_offset, SQUARE_SIZE * (y_offset + 1) + self.offset), char, font=self.font, fill=self.current_color, spacing=SQUARE_SIZE)
-            
+        
+    def img_to_pdf(self, images):
+        pdf = FPDF()
+        for image in images:
+            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
+            image.save(temp_file.name, format='PNG')
+            pdf.add_page()
+            pdf.image(temp_file.name, x=10, y=10, w=190)
+            temp_file.close()
+        return pdf.output(dest='S').encode('latin1')
 
 st.title("兰芳专属")
 title = st.text_input("请输入标题:")
@@ -133,21 +142,13 @@ if st.button("生成 PDF"):
                 producer = ArticleProducer(article=title, text=''.join(page_characters))
                 images.append(producer.paint())
                 #images.append(producer.generate_image())  # Append image object
-
+                
                 # Clear characters for the next page
                 page_characters = []
 
-        # Create PDF
-        pdf = FPDF()
-        for image in images:
-            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
-            image.save(temp_file.name, format='PNG')
-            pdf.add_page()
-            pdf.image(temp_file.name, x=10, y=10, w=190)
-            temp_file.close()
-
         # Save PDF to bytes
-        pdf_bytes = pdf.output(dest='S').encode('latin1')
+        #pdf_bytes = pdf.output(dest='S').encode('latin1')
+        pdf_bytes = producer.img_to_pdf(images)
         b64_pdf = base64.b64encode(pdf_bytes).decode('utf-8')
 
         # Display download link
