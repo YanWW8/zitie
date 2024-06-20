@@ -55,6 +55,7 @@ class ArticleProducer:
     def _init_painting(self):
         image = Image.new(MODE, (SQUARE_SIZE * (ROW + 2), SQUARE_SIZE * (LINE + 5)), BACK_COLOR)  # Adjusted height for title and info line
         self.draw = ImageDraw.Draw(image)
+        st.write(dir(draw))
         self.image = image
         self.create_table()
 
