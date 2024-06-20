@@ -5,7 +5,7 @@ import re
 import io
 import regex as re
 from fpdf import FPDF
-
+import tempfile
 
 # Define constants
 FONT_OPTIONS = {
@@ -55,7 +55,6 @@ class ArticleProducer:
     def _init_painting(self):
         image = Image.new(MODE, (SQUARE_SIZE * (ROW + 2), SQUARE_SIZE * (LINE + 5)), BACK_COLOR)  # Adjusted height for title and info line
         self.draw = ImageDraw.Draw(image)
-        st.write(dir(self.draw))
         self.image = image
         self.create_table()
 
@@ -97,6 +96,15 @@ class ArticleProducer:
                     char_index += 1  # Move to the next character
         return self.image
     
+    #def generate_image(self):
+    #    return self.image
+
+    def generate_image_bytes(self):
+        image_bytes = io.BytesIO()
+        self.image.save(image_bytes, format='PNG')
+        image_bytes.seek(0)
+        return image_bytes
+    
     def write_line(self, char, y):
         for x in range(ROW):
             y_offset = y * 2 + 2  # Adjusted y-coordinate
@@ -109,61 +117,47 @@ class ArticleProducer:
             # Draw character
             self.draw.text((x_offset, SQUARE_SIZE * (y_offset + 1) + self.offset), char, font=self.font, fill=self.current_color, spacing=SQUARE_SIZE)
             
-def generate_pdf(title, characters):
-    producer = ArticleProducer(article=title, text=characters)
-    image = producer.paint()
 
-    # Convert image to bytes
-    img_bytes = image_to_bytes(image)
-
-    # Generate and return download link
-    href = f'<a href="data:application/octet-stream;base64,{img_bytes}" download="{title}.png">下载 PDF</a>'
-    return href
-
-def image_to_bytes(image):
-    img_byte_array = io.BytesIO()
-    image.save(img_byte_array, format='PNG')
-    img_bytes = img_byte_array.getvalue()
-    return base64.b64encode(img_bytes).decode()
-
-def images_to_pdf(images):
-    pdf = FPDF()
-    for image in images:
-        img_byte_array = io.BytesIO()
-        image.save(img_byte_array, format='PNG')
-        img_byte_array.seek(0)
-        pdf.add_page()
-        pdf.image(img_byte_array, 0, 0, 210, 297)  # A4 size in mm
-    pdf_byte_array = io.BytesIO()
-    pdf.output(pdf_byte_array, 'F')
-    pdf_byte_array.seek(0)
-    return pdf_byte_array
-
-st.title("兰芳专属")
+st.title("兰芳专属字帖生成网")
 title = st.text_input("请输入标题:")
 characters_input = st.text_area("请输入汉字 (以逗号分隔):", "")
 
 font_option = st.selectbox("选择字体:", options=list(FONT_OPTIONS.keys()))
 
+# In your Streamlit app
 if st.button("生成 PDF"):
     characters = characters_input.split("，")
 
     if characters and title:
         FONT_PATH = FONT_OPTIONS.get(font_option)
-        
+
         images = []
         page_characters = []
         for i, char in enumerate(characters):
             page_characters.append(char)
-            if (i + 1) % 7 == 0 or i == len(characters) - 1:
+            if (i + 1) % 6 == 0 or i == len(characters) - 1:
                 producer = ArticleProducer(article=title, text=''.join(page_characters))
                 images.append(producer.paint())
+                #images.append(producer.generate_image())  # Append image object
+
+                # Clear characters for the next page
                 page_characters = []
 
-        pdf_byte_array = images_to_pdf(images)
-        b64_pdf = base64.b64encode(pdf_byte_array.getvalue()).decode()
+        # Create PDF
+        pdf = FPDF()
+        for image in images:
+            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
+            image.save(temp_file.name, format='PNG')
+            pdf.add_page()
+            pdf.image(temp_file.name, x=10, y=10, w=190)
+            temp_file.close()
 
-        href = f'<a href="data:application/octet-stream;base64,{b64_pdf}" download="{title}.pdf">下载 PDF</a>'
+        # Save PDF to bytes
+        pdf_bytes = pdf.output(dest='S').encode('latin1')
+        b64_pdf = base64.b64encode(pdf_bytes).decode('utf-8')
+
+        # Display download link
+        href = f'<a href="data:application/pdf;base64,{b64_pdf}" download="{title}.pdf">下载 PDF</a>'
         st.markdown(href, unsafe_allow_html=True)
     else:
         st.error("请输入标题和至少一个汉字。")
