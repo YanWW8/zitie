@@ -80,6 +80,8 @@ class ArticleProducer:
     def paint(self):
         # Draw the title
         title_width, title_height = self.draw.textsize(self.article, font=self.title_font)
+        #title_width, title_height = self.draw.textsize(self.article, font=title_font)
+
         title_x = (self.image.width - title_width) / 2
         self.draw.text((title_x, SQUARE_SIZE), self.article, font=self.title_font, fill='black')
         # Draw the info line
@@ -151,21 +153,6 @@ if st.button("生成 PDF"):
 
     if characters and title:
         FONT_PATH = FONT_OPTIONS.get(font_option)
-
-        
-        # Print out font paths for debugging
-        print(f"FONT_PATH: {FONT_PATH}")
-        print(f"TITLE_FONT: {TITLE_FONT}")
-        
-        # Load fonts
-        try:
-            font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
-            title_font = ImageFont.truetype(TITLE_FONT, TITLE_FONT_SIZE)
-            info_font = ImageFont.truetype(TITLE_FONT, INFO_FONT_SIZE)
-            # Continue with your code
-        except OSError as e:
-            print(f"Error loading font: {e}")
-            # Handle the error appropriately
         
         images = []
         page_characters = []
