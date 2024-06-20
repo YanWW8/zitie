@@ -1,4 +1,4 @@
-streamlit==0.79.0
+streamlit
 Pillow
-regex==2021.11.1
-fpdf==1.7.2
+regex
+fpdf
