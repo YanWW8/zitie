@@ -86,13 +86,13 @@ class ArticleProducer:
 
     def paint(self):
         # Draw the title
-        title_width, title_height = estimate_text_size(self.article, font=self.title_font)
+        title_width, title_height = self.estimate_text_size(self.article, font=self.title_font)
         title_x = (self.image.width - title_width) / 2
         self.draw.text((title_x, SQUARE_SIZE), self.article, font=self.title_font, fill='black')
     
         # Draw the info line
         info_text = "姓名: ________    教师评价：坐姿 ☆☆☆☆☆    等级：________"
-        info_width, info_height = estimate_text_size(info_text, font=self.info_font)
+        info_width, info_height = self.estimate_text_size(info_text, font=self.info_font)
         info_x = (self.image.width - info_width) / 2
         self.draw.text((info_x, SQUARE_SIZE * 2), info_text, font=self.info_font, fill='black')
     
