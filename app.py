@@ -55,7 +55,7 @@ class ArticleProducer:
     def _init_painting(self):
         image = Image.new(MODE, (SQUARE_SIZE * (ROW + 2), SQUARE_SIZE * (LINE + 5)), BACK_COLOR)  # Adjusted height for title and info line
         self.draw = ImageDraw.Draw(image)
-        st.write(dir(draw))
+        st.write(dir(self.draw))
         self.image = image
         self.create_table()
 
@@ -151,10 +151,6 @@ if st.button("生成 PDF"):
     if characters and title:
         FONT_PATH = FONT_OPTIONS.get(font_option)
         
-        # Assuming 'self.title_font' is the object in question
-        attributes_and_methods = dir(FONT_PATH)
-        st.write(attributes_and_methods)
-
         images = []
         page_characters = []
         for i, char in enumerate(characters):
