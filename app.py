@@ -74,12 +74,12 @@ class ArticleProducer:
     def draw_level_line(self, x1, x2, y, width, step=1):
         for x in range(x1, x2, step):
             self.draw.line([(x, y), (x + step / 2, y)], fill=TABLE_COLOR, width=width)
-    
-    def estimate_text_size(text, font):
+
+    def estimate_text_size(self, text, font):
         width = 0
         height = 0
         for char in text:
-            char_width, char_height = font.getsize(char)
+            char_width, char_height = self.draw.textsize(char, font=font)
             width += char_width
             height = max(height, char_height)
         return width, height
