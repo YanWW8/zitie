@@ -5,7 +5,7 @@ import regex as re
 from fpdf import FPDF
 import tempfile
 import concurrent.futures
-port tempfile
+
 
 # Define constants
 FONT_OPTIONS = {
