@@ -118,7 +118,7 @@ def generate_page(article, text, font_path):
     producer = ArticleProducer(article=article, text=text, font_path=font_path)
     return producer.paint()
 
-st.title("字帖")
+st.title("♡兰芳专属♡")
 title = st.text_input("请输入标题:")
 characters_input = st.text_area("请输入汉字 (以逗号分隔):", "")
 
